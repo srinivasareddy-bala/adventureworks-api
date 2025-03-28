@@ -3,35 +3,40 @@ import pandas as pd
 
 app = FastAPI()
 
-# Load the CSV data (Replace 'data.csv' with your actual file path)
-DATA_FILE = "data.csv"
-df = pd.read_csv(DATA_FILE)
+CUSTOMERS_DATA_FILE = "customers_api.csv"
+SALES_DATA_FILE = "sales_api.csv"
+
+df_customers = pd.read_csv(CUSTOMERS_DATA_FILE)
+df_sales = pd.read_csv(SALES_DATA_FILE)
 
 @app.get("/")
 def read_root():
     return {"message": "FastAPI is running!"}
 
-@app.get("/data")
+@app.get("/data/customers")
 def get_all_data():
-    """Fetch all data from the CSV."""
-    return df.to_dict(orient="records")
+    """Fetch all customers data from the CSV."""
+    return df_customers.to_dict(orient="records")
 
-@app.get("/data/{row_id}")
+@app.get("/data/sales")
+def get_all_data():
+    """Fetch all sales data from the CSV."""
+    return df_sales.to_dict(orient="records")
+
+@app.get("/data/sales/{row_id}")
 def get_row_by_id(row_id: int):
     """Fetch a specific row by index (assuming 0-based index)."""
     if row_id < 0 or row_id >= len(df):
         raise HTTPException(status_code=404, detail="Row not found")
-    return df.iloc[row_id].to_dict()
+    return df_sales.iloc[row_id].to_dict()
 
-@app.get("/filter")
-def filter_data(column: str = Query(...), value: str = Query(...)):
-    """Filter data based on a column and value."""
-    if column not in df.columns:
-        raise HTTPException(status_code=400, detail="Invalid column name")
-    
-    filtered_df = df[df[column].astype(str) == value]
-    if filtered_df.empty:
-        raise HTTPException(status_code=404, detail="No matching records found")
+@app.get("/data/customers/{row_id}")
+def get_row_by_id(row_id: int):
+    """Fetch a specific row by index (assuming 0-based index)."""
+    if row_id < 0 or row_id >= len(df):
+        raise HTTPException(status_code=404, detail="Row not found")
+    return df_customers.iloc[row_id].to_dict()
+
     
     return filtered_df.to_dict(orient="records")
 
