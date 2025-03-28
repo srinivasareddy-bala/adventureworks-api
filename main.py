@@ -26,14 +26,14 @@ def get_all_data():
 @app.get("/data/sales/{row_id}")
 def get_row_by_id(row_id: int):
     """Fetch a specific row by index (assuming 0-based index)."""
-    if row_id < 0 or row_id >= len(df):
+    if row_id < 0 or row_id >= len(df_sales):
         raise HTTPException(status_code=404, detail="Row not found")
     return df_sales.iloc[row_id].to_dict()
 
 @app.get("/data/customers/{row_id}")
 def get_row_by_id(row_id: int):
     """Fetch a specific row by index (assuming 0-based index)."""
-    if row_id < 0 or row_id >= len(df):
+    if row_id < 0 or row_id >= len(df_customers):
         raise HTTPException(status_code=404, detail="Row not found")
     return df_customers.iloc[row_id].to_dict()
 
