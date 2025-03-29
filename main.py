@@ -16,6 +16,7 @@ def read_root():
 @app.get("/data/customers")
 def get_all_data():
     """Fetch all customers data from the CSV."""
+    df_customers = df_customers.astype(str)
     return df_customers.to_dict(orient="records")
 
 @app.get("/data/sales")
